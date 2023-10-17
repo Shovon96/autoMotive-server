@@ -31,6 +31,7 @@ async function run() {
 
     // collections
     const brandCollections = client.db('brandsDB').collection('brands');
+    const carCollections = client.db('brandsDB').collection('cars');
 
     // Brands releted apis
     app.get('/brands', async (req, res) => {
@@ -42,6 +43,21 @@ async function run() {
     app.post('/brands', async(req, res)=> {
         const newBrands = req.body;
         const result = await brandCollections.insertOne(newBrands)
+        res.send(result)
+    })
+
+    // Cars apis
+    app.get('/cars/:brand_name', async (req, res) => {
+        const brandName = req.params.brand_name;
+        const query = {brand_name: brandName};
+        const cursor = carCollections.find(query);
+        const result = await cursor.toArray()
+        res.send(result)
+    })
+
+    app.post('/cars', async(req, res)=> {
+        const newBrandsDetails = req.body;
+        const result = await carCollections.insertOne(newBrandsDetails)
         res.send(result)
     })
 
