@@ -29,6 +29,7 @@ async function run() {
         // collections
         const brandCollections = client.db('brandsDB').collection('brands');
         const carCollections = client.db('brandsDB').collection('cars');
+        const cartCollections = client.db('brandsDB').collection('cart');
 
         // Brands releted apis
         app.get('/brands', async (req, res) => {
@@ -91,6 +92,21 @@ async function run() {
             res.send(result);
         })
 
+        // Cart apis
+        app.post('/carts', async (req, res) => {
+            const data = req.body;
+            const result = await cartCollections.insertOne(data)
+            res.send(result)
+        })
+
+        app.get('/carts/:email', async (req, res) => {
+            const email = req.params.email;
+            console.log(email)
+            const query = { email: email };
+            const cursor = cartCollections.find(query);
+            const result = await cursor.toArray()
+            res.send(result)
+        })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
